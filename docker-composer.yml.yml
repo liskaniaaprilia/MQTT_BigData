@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mqtt:
+    build: ./mqtt
+    ports:
+      - "1883:1883"
+    networks:
+      - sensor_net
+
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - sensor_net
+
+  dummy_service:
+    build: ./dummy_service
+    depends_on:
+      - mqtt
+    networks:
+      - sensor_net
+
+networks:
+  sensor_net:
+    driver: bridge
